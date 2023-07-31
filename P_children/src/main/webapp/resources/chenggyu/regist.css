@@ -1,0 +1,92 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap');
+}
+* {
+	margin: 0;
+	padding: 0;
+	font-family: 'Poppins', sans-serif;
+}
+section{
+	display: flex;
+	min-height: 100vh;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+.form-box{
+	max-width: 700px;
+	width: 100%;
+	padding: 25px 30px;
+	border: 2px solid #C19681;
+	border-radius: 20px;
+}
+.form-box .title{
+	font-size: 25px;
+	font-weight: 500;
+	position: relative;
+}
+.form-box .title::before {
+	content: ' ' ;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 3px;
+	width: 110px;
+	background: #C19681;
+}
+.form-box form .user-details{
+	display:  flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.user-details .input-box .details{
+	display: block;
+	font-weight: 500;
+	margin-bottom: 5px;
+}
+.user-details .input-box-addr .details{
+	display: block;
+	font-weight: 500;
+	margin-bottom: 5px;
+}
+from .user-details .input-box{
+	margin: 20px 0 12px 0;
+	width: calc(100%/2 - 20px);
+}
+from .user-details .input-box-addr{
+	margin: 20px 0 12px 0;
+	width: calc(100%/2 - 20px);
+}
+.user-details .input-box input{
+	height: 35px;
+	width: 100%;
+	outline: none;
+	border-radius: 5px;
+	border: 1px solid #C19681;
+	padding-left: 10px;
+	font-size:  15px;
+	margin-bottom: 5px;
+}
+.user-details .input-box-addr{
+	display: block;
+	width: 25%;
+	font-weight: 500;
+	margin-top: 20px;
+}
+.user-details .input-box-addr input{
+	height: 35px;
+	width: 100%;
+	margin-bottom: 10px;
+}
+.but_1 {
+	width: 100%;
+	height: 40px;
+	border-radius: 40px;
+	background: #C19681;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 600;
+	margin-top: 5px;
+}

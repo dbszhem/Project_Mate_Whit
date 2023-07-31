@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mappers/file/boardMapper.xml -->
+<mapper namespace="com.web.root.mybatis.board.BoardMapper">
+
+	<!-- 자유 게시판 -->
+	<resultMap  id="board" type="com.web.root.board.dto.BoardDTO">
+		<id property="write_no" column="write_no"/> <!-- property는 DTO랑 column은 DB랑 같아야함  -->
+		<result property="category" column="category"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="savedate" column="savedate"/>
+		<result property="hit" column="hit"/>
+		<result property="file_name" column="file_name"/>
+		<result property="id" column="id"/>
+		<result property="dibsCount" column="dibsCount"/> <!-- DB에는 없는 count -->
+	</resultMap>
+	
+	<!-- 프로그램 게시판 -->
+	<resultMap  id="programBoard" type="com.web.root.board.dto.ProgramBoardDTO">
+		<id property="write_no" column="write_no"/> <!-- property는 DTO랑 column은 DB랑 같아야함  -->
+		<result property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="petKind" column="petKind"/>
+		<result property="mateName" column="mateName"/>
+		<result property="mateImage" column="mateImage"/>
+		<result property="content" column="content"/>
+		<result property="position1" column="position1"/>
+		<result property="position2" column="position2"/>
+		<result property="startDate" column="startDate"/>
+		<result property="startTime" column="startTime"/>
+		<result property="endDate" column="endDate"/>
+		<result property="endTime" column="endTime"/>
+		<result property="priceForProgram" column="priceForProgram"/>
+		<result property="savedate" column="savedate"/>
+		<result property="hit" column="hit"/>
+		<result property="state" column="state"/>
+		<result property="currentRegisterCount" column="currentRegisterCount"/>
+		<result property="totalRegisterCount" column="totalRegisterCount"/>
+		
+	</resultMap>
+	
+	<!-- 찜하기 기능 -->
+	<resultMap  id="dibsboard" type="com.web.root.board.dto.BoardDibsDTO">
+		<result property="write_no" column="write_no"/> 	<!-- board의 write_no  -->
+		<result property="id" column="id"/>					<!-- user의 id -->
+		<result property="dibs_no" column="dibs_no"/>		<!-- 찜하기의 id라고 할 수 있다. -->
+		<result property="dibs_state" column="dibs_state"/>	<!-- 1이면 찜 0이면 찜하기 취소 -->
+	</resultMap>
+	
+	<!--  공지사항 게시판  -->
+	<resultMap id="notice" type="com.web.root.board.dto.NoticeBoardDTO">
+		<id property="write_no" column="write_no"/> <!-- property는 DTO랑 column은 DB랑 같아야함  -->
+		<result property="category" column="category"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="savedate" column="savedate"/>
+		<result property="hit" column="hit"/>
+		<result property="file_name" column="file_name"/>
+		<result property="id" column="id"/>
+		<result property="keyword" column="keyword"/>
+		<result property="start" column="start"/>
+		<result property="end" column="end"/>
+	</resultMap>
+	
+
+	<!-- 댓글과 대댓글 -->
+ 	<resultMap id="reply" type="com.web.root.board.dto.BoardRepDTO">
+ 		<result property="reply_no" column="reply_no"/>
+ 		<result property="depth" column="depth"/>
+ 		<result property="cGroup" column="cGroup"/>
+		<result property="id" column="id"/>
+		<result property="content" column="content"/>
+		<result property="write_group" column="write_group"/>
+		<result property="write_date" column="write_date"/>
+	</resultMap>
+	
+	<!-- 문의 게시판 -->
+	<resultMap id="qna" type="com.web.root.qna.dto.QnaDTO" >
+		<id property="write_no" column="write_no"/>
+		<result property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="savedate" column="savedate"/>
+		<result property="status" column="status"/>
+	</resultMap>
+	
+	<resultMap id="qna_rep" type="com.web.root.qna.dto.Qna_RepDTO" >
+		<id property="write_group" column="write_group"/>
+		<result property="content" column="content"/>
+	</resultMap>
+	
+ 	<!-- 성수 : 내가 결제한 프로그램 정보 저장 테이블 -->
+<!--	<resultMap type="com.web.root.board.dto.PaidProgramInfoDTO" id="paidProgramInfo">
+		<id property="paymentId" column="paymentId"/>
+		<result property="title" column="title"/> 
+		<result property="write_no" column="write_no"/> 
+		<result property="num" column="num"/> 
+	</resultMap> -->
+	
+	<!-- 프로그램 게시판 결재 확인 기능 -->
+	<resultMap  id="paidProgramInfo" type="com.web.root.board.dto.PaidProgramInfoDTO">
+		<result property="id" column="id"/>					<!-- host의 id -->
+		<result property="title" column="title"/>			<!-- 프로그램 게시판의 제목 -->		
+		<result property="write_no" column="write_no"/> 	<!-- 프로그램 게시판의 write_no  -->
+		<result property="num" column="num"/>				<!-- num -->
+		<result property="cancel_request" column="cancel_request"/> <!-- 취소 진행 여부 -->
+		<result property="tid" column="tid"/> <!-- 취소 진행 여부 -->
+	</resultMap>
+
+	<!--  ======================== 진욱 시작 ==========================   -->
+
+	<select id="manager_board" resultMap="board">
+		SELECT B.* FROM
+		(SELECT ROWNUM rn, A.* FROM
+		(SELECT * FROM board2 ORDER BY write_no DESC)A )B
+		WHERE rn BETWEEN #{s} and #{e}
+	</select>
+	
+	<select id="boardAllList" resultMap="board">
+		SELECT B.* FROM
+		(SELECT ROWNUM rn, A.* FROM
+		(SELECT * FROM board2 ORDER BY write_no DESC)A )B
+		WHERE rn BETWEEN #{s} and #{e}
+	</select>
+
+ 	<select id="selectBoardCount" resultType="Integer">
+		SELECT COUNT(*) FROM board2
+	</select>
+	
+	<insert id="writeSave">
+		INSERT INTO board2(write_no, category, id, title, content, file_name)
+		VALUES(board_seq.NEXTVAL, #{category}, #{id}, #{title}, #{content}, #{file_name})
+	</insert>
+	
+	<select id="contentView" resultMap="board">
+		SELECT * FROM board2 WHERE write_no=#{write_no}
+	</select>
+
+
+	<update id="hitplus" parameterType="com.web.root.board.dto.BoardDTO">
+		UPDATE board2 SET hit = hit+1 WHERE write_no=#{write_no}
+	</update>
+	
+	<update id="modifySave" parameterType="com.web.root.board.dto.BoardDTO">
+		UPDATE board2 SET title=#{title}, content=#{content} WHERE write_no=#{write_no}
+	</update>
+	
+	<update id="modifySaveWithFile" parameterType="com.web.root.board.dto.BoardDTO">
+		UPDATE board2 SET title=#{title}, content=#{content}, file_name=#{file_name} WHERE write_no=#{write_no}
+	</update>
+	
+	<update id="modifyToDeleteFileName" parameterType="com.web.root.board.dto.BoardDTO">
+		UPDATE board2 SET file_name = 'nan' WHERE file_name=#{file_name}
+	</update>
+	
+	<delete id="deleteBoard">
+		DELETE FROM board2 WHERE write_no=#{write_no}
+	</delete>
+	
+	<select id="selectBoardCountByCategory" resultType="Integer">
+		SELECT COUNT(*) FROM board2 where category=#{category}
+	</select>
+	
+	<select id="boardAllListByCategory" resultMap="board">
+		SELECT B.* FROM
+		(SELECT ROWNUM rn, A.* FROM
+		(SELECT * FROM board2 WHERE category=#{category} ORDER BY write_no DESC)A )B
+		WHERE rn BETWEEN #{s} and #{e}
+	</select>
+	
+	<!-- 게시판 게시글 카테고리+검색 => 해당 검색 카테고리리를 통해 각각 글 갯수 가져오기 -->
+	<select id="boardCountCategory" resultType="Integer"> 
+		SELECT COUNT(*) FROM board2 where category like #{category}
+		and (title like '%'||#{title}||'%' and content like '%'||#{content}||'%' and id like '%'||#{id}||'%')
+	</select>
+		
+	<!-- 게시판 게시글 카테고리+검색 => 요청 내용들에 따라 해당 리스트들 불러오기 -->
+	<select id="boardSearchFormCountList" resultMap="board"> 
+			SELECT B.* FROM 
+			(SELECT ROWNUM rn, A.* FROM 
+			(SELECT * FROM board2 where 
+			(title like '%'||#{title}||'%' and content like '%'||#{content}||'%' and id like '%'||#{id}||'%') 
+			and category like '%'||#{category}||'%' ORDER BY write_no DESC)A )B
+			WHERE rn BETWEEN #{s} and #{e} 
+	</select>
+	
+	<!-- 댓글 기능 -->
+	<insert id="addReply">
+		INSERT INTO reply2 VALUES(reply_seq.NEXTVAL, 0, 0, #{id}, #{content},#{write_no} ,SYSDATE)
+	</insert>
+	
+	<select id="getRepList" resultMap="reply">
+		SELECT * FROM reply2 WHERE write_group=#{write_group}
+		ORDER BY write_date DESC
+	</select>
+
+	<delete id="deleteReply">
+		DELETE FROM reply2 WHERE reply_no=#{reply_no} AND write_group=#{write_group}
+	</delete>
+	
+	<update id="updateReply">
+		UPDATE reply2 SET content=#{updateContent} WHERE id=#{id} AND reply_no=#{updateReply_no}
+	</update>
+	
+	<!-- 답글 기능 -->
+	<select id="getReCommentList" resultMap="reply">
+		SELECT * FROM reply2 WHERE cGroup = #{reply_no}
+		ORDER BY write_date
+	</select>
+	
+	<insert id="addReComment">
+		INSERT INTO reply2 VALUES(reply_seq.NEXTVAL, 1, #{cGroup}, #{id}, #{reCommentContent},#{write_no} ,SYSDATE)
+	</insert>
+	
+	<update id="updateReComment">
+		UPDATE reply2 SET content=#{updateContent} WHERE id=#{id} AND reply_no=#{updateReply_no}
+	</update>
+	
+	<!-- 프로그램 게시판 -->
+	<insert id="writeSaveForProgram">
+		INSERT INTO programBoard(write_no, id, title, petKind, mateName, mateImage, content, position1, position2, startDate, startTime, endDate, endTime, priceForProgram, saveDate, hit, totalRegisterCount)
+		VALUES (board_seq.NEXTVAL, #{id}, #{title}, #{petKind}, #{mateName}, #{mateImage}, #{content}, #{position1}, #{position2}, #{startDate}, #{startTime}, #{endDate}, #{endTime}, #{priceForProgram}, SYSDATE, 0, #{totalRegisterCount})
+	</insert>
+
+	<select id="selectProgramBoardCount" resultType="Integer">
+		SELECT COUNT(*) FROM programBoard
+	</select>
+	
+	<select id="programBoardAllList" resultMap="programBoard">
+		SELECT B.* FROM
+		(SELECT ROWNUM rn, A.* FROM
+		(SELECT * FROM programBoard ORDER BY write_no DESC)A )B
+		WHERE rn BETWEEN #{s} and #{e}
+	</select>
+	
+	<select id="programContentView" resultMap="programBoard">
+		SELECT * FROM programBoard WHERE write_no= #{write_no}
+	</select>
+	
+	<update id="programHitplus">
+		UPDATE programBoard SET hit=hit+1 WHERE write_no =#{write_no}
+	</update>
+	
+	<update id="modifySaveForProgram" parameterType="com.web.root.board.dto.ProgramBoardDTO">
+		UPDATE programBoard
+		SET title=#{title},
+			petKind=#{petKind},
+			mateName=#{mateName}
+			content=#{content},
+			position1=#{position1},
+			position2=#{position2},
+			startDate=#{startDate},
+			startTime=#{startTime},
+			endDate=#{endDate},
+			endTime=#{endTime},
+			state=#{state},
+			priceForProgram=#{priceForProgram}
+		WHERE write_no = #{write_no}
+	</update>
+	
+	<update id="modifySaveForProgramWithFile" parameterType="com.web.root.board.dto.ProgramBoardDTO">
+		UPDATE programBoard
+		SET title=#{title},
+			petKind=#{petKind},
+			mateName=#{mateName},
+			mateImage=#{mateImage},
+			content=#{content},
+			position1=#{position1},
+			position2=#{position2},
+			startDate=#{startDate},
+			startTime=#{startTime},
+			endDate=#{endDate},
+			endTime=#{endTime},
+			state=#{state},
+			priceForProgram=#{priceForProgram}
+		WHERE write_no = #{write_no}
+	</update>
+	
+	<delete id="deleteProgram">
+		DELETE FROM programBoard WHERE write_no=#{write_no}	
+	</delete>
+	
+	<!-- 게시판 게시글 카테고리+검색 => 해당 검색 카테고리리를 통해 각각 글 갯수 가져오기 -->
+	<select id="programBoardCountCategory" resultType="Integer"> 
+		SELECT COUNT(*) FROM programBoard where state like #{state}
+		and (title like '%'||#{title}||'%' and content like '%'||#{content}||'%' and id like '%'||#{id}||'%' and mateName like '%'||#{mateName}||'%')
+	</select>
+	
+	<!-- 게시판 게시글 카테고리+검색 => 요청 내용들에 따라 해당 리스트들 불러오기 -->
+	<select id="programBoardSearchFormCountList" resultMap="programBoard"> 
+			SELECT B.* FROM 
+			(SELECT ROWNUM rn, A.* FROM 
+			(SELECT * FROM programBoard where 
+			(title like '%'||#{title}||'%' and content like '%'||#{content}||'%' and id like '%'||#{id}||'%' and mateName like '%'||#{mateName}||'%') 
+			and state like '%'||#{state}||'%' ORDER BY write_no DESC)A )B
+			WHERE rn BETWEEN #{s} and #{e} 
+	</select>
+	
+	<select id="paidProgramInfoByWriteNo" resultMap="paidProgramInfo">
+		SELECT * FROM paidprograminfo WHERE write_no=#{write_no}
+	</select>
+	
+	<!-- 카카오 페이 승인 시 프로그램 결재 완료 후 승인 대기로 이동 (신청한 완료 뒤 : 신청한 인원 < 총원 )  -->
+	<update id="paidProgramContentView">
+		UPDATE programBoard SET currentRegisterCount = currentRegisterCount+1 WHERE write_no = #{write_no}
+	</update>
+	
+	<!-- 카카오 페이 승인 시 프로그램 결재 완료 후 승인 대기로 이동 (신청한 완료 뒤 : 신청한 인원 = 총원 )  -->
+	<update id="lastPaidProgramContentView">
+		UPDATE programBoard SET currentRegisterCount = currentRegisterCount+1, state='결재 완료' WHERE write_no = #{write_no}
+	</update>
+	
+	<!-- 호스트의 마이페이지에서 프로그램 결재 취소 요청 보내기 기능 -->
+	<update id="paidCancelRequestByTid">
+		UPDATE paidprograminfo SET cancel_request = 'P' WHERE tid=#{tid}
+	</update>
+	
+	<!-- 관리자 마이페이지에서 결재 취소시 paid에서도 삭제 기능 -->
+	<delete id="deletePaidProgramInfoByTid" >
+		DELETE FROM paidprograminfo WHERE tid=#{tid} AND cancel_request = 'P'
+	</delete>
+	
+	<!-- 관리자 마이페이지에서 결재 취소시 programBoard에 정보 전닳기 위한 paidProgramInfo 가져오기 기능 -->
+	<select id="getPaidProgramInfoByTid" resultMap="paidProgramInfo">
+		SELECT * FROM paidprograminfo where tid=#{tid}
+	</select>
+	
+	<!-- 결재 취소로 발생하는 programBoard 변화 반영(state ='예약 가능', currentRegisterCount -1) -->
+	<update id="updateProgramBoardByCancel">
+		UPDATE programBoard SET state='예약가능', currentRegisterCount = currentRegisterCount - 1 WHERE write_no = #{write_no}
+	</update>
+	
+	
+	
+	
+	<!-- 찜하기 기능 -->
+	
+	<!-- 처음으로 하트 누른 것인지 확인 -->
+	<select id="dibsExsistance" resultType="Integer">
+		SELECT COUNT(*) FROM dibs WHERE id=#{id} AND write_no=#{write_no}
+	</select>
+	
+	<!-- (처음으로 찜하기룰 눌렀을 떄) 찜하기 생성 기능 -->
+	<insert id="insertDibs">
+		INSERT INTO dibs VALUES(#{id}, #{write_no}, dibs_seq.NEXTVAL, 1)
+	</insert>
+	
+	<!-- 찜하기 객체 불러오기 (유저 아이디, 게시판 번호로) -->
+	<select id="getDibsByIdWriteNo" resultMap="dibsboard">
+		SELECT * FROM dibs WHERE id=#{id} AND write_no=#{write_no}
+	</select>
+	
+	<!-- (찜하기가 처음이 아닐 때) 찜하기 업데이트 기능 -->
+	<update id="updateDib">
+		UPDATE dibs SET dibs_state=#{dibs_state} WHERE id=#{id} AND write_no=#{write_no}
+	</update>
+	
+	<!-- 내가 찜한 게시판 수 가져오기 -->
+	<select id="selectMyDibsBoardCount" resultType="Integer">
+		SELECT COUNT(*)
+		FROM board2
+		WHERE write_no IN (SELECT write_no FROM dibs WHERE id=#{id} AND dibs_state=1)
+	</select>
+	
+	<!-- 내가 찜한 게시판 리스트 가져오기 -->
+	<select id="myDibsBoardAllList" resultMap="board">
+		SELECT B.* FROM
+    		(SELECT ROWNUM rn, A.* FROM
+        		(SELECT *
+        		 FROM board2
+        		 WHERE write_no IN (SELECT write_no FROM dibs WHERE id=#{id} AND dibs_state=1)
+    			 ORDER BY SAVEDATE DESC)A
+    		 ) B
+    	WHERE rn BETWEEN #{s} AND #{e}
+	</select>
+	
+	<!-- 게시판이 받은 찜의 갯수 가져오기 -->
+	<select id="getdibsNumByWriteNo" resultType="Integer">
+		SELECT count(*) FROM dibs WHERE write_no = #{write_no} AND dibs_state=1
+	</select>
+	
+	<!-- 내가 찜한 프로그램게시판 수 가져오기 -->
+	<select id="selectMyDibsProgramBoardCount" resultType="Integer">
+		SELECT COUNT(*)
+		FROM programBoard
+		WHERE write_no IN (SELECT write_no FROM dibs WHERE id=#{id} AND dibs_state=1)
+	</select>
+	
+	<!-- 내가 찜한 프로그램 게시판 리스트 가져오기 -->
+	<select id="myDibsProgramBoardAllList" resultMap="programBoard">
+		SELECT B.* FROM
+    		(SELECT ROWNUM rn, A.* FROM
+        		(SELECT *
+        		 FROM programBoard
+        		 WHERE write_no IN (SELECT write_no FROM dibs WHERE id=#{id} AND dibs_state=1)
+    			 ORDER BY SAVEDATE DESC)A
+    		 ) B
+    	WHERE rn BETWEEN #{s} AND #{e}
+	</select>	
+	
+	
+	<!--  ======================== 진욱 끝 ==========================   -->
+	
+	
+	
+	
+	<!--  ======================== 윤희 시작 ==========================   -->
+	
+	
+	<!-- DB에 담겨있는 전체 게시글 수 (전체 글 수) -->
+	<select id="selectNoticeBoardCount" resultType="Integer"> 
+		SELECT COUNT(*) FROM notice
+	</select>
+	
+	<!-- 페이징 -->
+	<select id="noticeBoardAllList" resultMap="notice"> 
+		SELECT B.* FROM 
+		(SELECT ROWNUM rn, A.* FROM 
+		(SELECT * FROM notice ORDER BY write_no DESC)A )B 
+		WHERE rn BETWEEN #{s} and #{e} 
+	</select>
+	
+	<!-- 공지사항 게시글 보기 -->
+	<select id="noticeBoardContentView" resultMap="notice">
+		SELECT * FROM notice WHERE write_no=#{write_no}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="noticeBoardHitplus" parameterType="com.web.root.board.dto.NoticeBoardDTO">
+		UPDATE notice SET hit = hit+1 WHERE write_no=#{write_no}
+	</update>
+	
+	<!-- NoticeBoardDTO 에 있는 내용 DB에 저장 -->
+	<insert id="noticeBoardWriteSave">
+		INSERT INTO notice(write_no, category, id, title, content, file_name)
+		VALUES(noticeBoard_seq.NEXTVAL, #{category}, #{id}, #{title}, #{content}, #{file_name})
+	</insert>
+	
+	<!-- 공지사항 게시글 수정 -->
+	<update id="noticeBoardModifySaveWithFile" parameterType="com.web.root.board.dto.NoticeBoardDTO">
+		UPDATE notice SET category=#{category}, title=#{title}, content=#{content}, file_name=#{file_name} WHERE write_no=#{write_no}
+	</update>
+	
+	<!-- 공지사항 게시글 삭제 -->
+	<delete id="noticeBoardDelete">
+		DELETE FROM notice WHERE write_no=#{write_no}
+	</delete>
+	
+	
+	
+	<!-- 공지사항 게시글 카테고리+검색 => 해당 검색 카테고리리를 통해 각각 글 갯수 가져오기 -->
+	<select id="noticeBoardCountCategory" resultType="Integer"> 
+		SELECT COUNT(*) FROM notice where category like #{category}
+		and (title like '%'||#{title}||'%' and content like '%'||#{content}||'%' and id like '%'||#{id}||'%')
+	</select>
+		
+	<!-- 공지사항 게시글 카테고리+검색 => 요청 내용들에 따라 해당 리스트들 불러오기 -->
+	 <select id="noticeSearchFormCountList" resultMap="notice"> 
+			SELECT B.* FROM 
+			(SELECT ROWNUM rn, A.* FROM 
+			(SELECT * FROM notice where 
+			(title like '%'||#{title}||'%' and content like '%'||#{content}||'%' and id like '%'||#{id}||'%') 
+			and category like '%'||#{category}||'%' ORDER BY write_no DESC)A )B
+			WHERE rn BETWEEN #{start} and #{end} 
+	</select>
+	
+	<!-- 마이페이지 프로그램 게시판 내용 필요해서 조회 -->
+	<select id="programBoardInformation" resultMap="programBoard">
+		SELECT * FROM programBoard WHERE id=#{id}
+	</select>
+	
+	
+	
+	<!--  ======================== 윤희 끝 ==========================   -->
+	
+	<!-- ======================== 임청규 시작 ======================= -->
+	
+	<select id="manager_qna" resultMap="qna">
+		SELECT B.* FROM
+		(SELECT ROWNUM rn, A.* FROM
+		(SELECT * FROM qna ORDER BY savedate DESC)A )B
+		WHERE rn BETWEEN #{s} and #{e}
+	</select>
+	
+	<select id="selectQnaCount_manager" resultType="Integer">
+		SELECT COUNT(*) FROM qna
+	</select>
+	
+	<select id="member_qna" resultMap="qna">
+		SELECT B.* FROM
+		(SELECT ROWNUM rn, A.* FROM
+		(SELECT * FROM qna WHERE id=#{id} ORDER BY savedate DESC)A )B
+		WHERE rn BETWEEN #{s} and #{e}
+	</select>
+	
+	<select id="selectQnaCount_member" resultType="Integer">
+		SELECT COUNT(*) FROM qna WHERE id=#{id}
+	</select>
+	
+	<insert id="member_write_save">
+		INSERT INTO qna VALUES(write_no_qna.NEXTVAL, #{id}, #{title}, #{content}, SYSDATE, 1)
+	</insert>
+	
+	<insert id="manager_write_save">
+		INSERT INTO qna_rep VALUES(#{content}, #{write_group})
+	</insert>
+	
+	<select id="contentView_qna" resultMap="qna">
+		SELECT * FROM qna WHERE write_no=#{write_no}
+	</select>
+	
+	<select id="contentView_rep_qna" resultMap="qna_rep">
+		SELECT * FROM qna_rep WHERE write_group=#{write_group}
+	</select>
+	
+	<update id="qna_state">
+		UPDATE qna SET status= status+1 WHERE write_no=#{asdf}
+	</update>
+	
+	<!-- ======================== 임청규 끝 ======================= -->
+	
+	
+	<!-- 	// =============================== 성수 시작 ================================== -->
+	<select id="selectProgramInfo" resultMap="programBoard">
+		SELECT B.* FROM
+	 	(SELECT ROWNUM rn, A.* FROM
+		(SELECT * FROM programboard ORDER BY write_no DESC)A )B
+		WHERE rn=1
+	</select>
+	
+	<insert id="insertPaidProgramInfo">
+		INSERT INTO paidProgramInfo VALUES(#{id}, #{title}, #{write_no}, #{num}, DEFAULT, #{tid})
+	</insert>
+	
+	<!-- 	// =============================== 성수 끝 ================================== -->
+	
+	
+	
+	
+</mapper>

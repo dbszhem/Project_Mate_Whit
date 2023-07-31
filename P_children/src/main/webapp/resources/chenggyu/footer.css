@@ -1,0 +1,14 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap');
+footer {
+  /* footer를 aside위에 올리기 위해 사용(부유객체) */
+  position: absolute;
+  width: 100%;
+  padding: auto;
+  line-height: 30px;
+  color: black;
+  font-size: 15px;
+  text-align: center;
+  border-top: 2px solid #A16F63;
+  background-color:transparent;
+}
